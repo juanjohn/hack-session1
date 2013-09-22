@@ -1,0 +1,81 @@
+<html>
+
+<head>
+<!--HEARTTHROB-->
+<!--THE WORLD RISES FROM ASH 22.09.2013 11:40-->
+</head>
+
+<body Bgcolor="black">
+
+<canvas width="1340" height="640" id="can" style="border: 2px solid white;"></canvas>
+
+<script>
+
+var canvas=document.getElementById("can");
+var ctx=canvas.getContext('2d');
+var n_balls=100;
+
+function ball(m,u,r,x,y,a,c)
+	{
+	this.m=m;
+	this.u=u;
+	this.r=r;
+	this.x=x;
+	this.y=y;
+	this.a=a;
+	this.c=c;
+	}
+
+function createb(i)
+	{
+	var u=10;//Math.floor(Math.random()*21+30);
+	var r=Math.floor(Math.random()*21+30);
+	var m=Math.floor(Math.pow(r,3));
+	var x=Math.floor(Math.random()*(canvas.width-200))+100;
+	var y=Math.floor(Math.random()*(canvas.height-200))+100;
+	var a=Math.floor(Math.random()*361);
+	var opa=Math.random()*0.5+0.5;
+	var c="rgba("+Math.floor(Math.random()*247+10)+","+Math.floor(Math.random()*247+10)+","+Math.floor(Math.random()*247+10)+","+opa+")";
+	object[i]=new ball(m,u,r,x,y,a,c);
+	console.log(object[i].a);
+	}
+	
+var object=new Array(n_balls);
+for(var i=0;i<n_balls;i++)
+	createb(i);
+	
+function move(i)
+	{ 
+	if(((object[i].x+object[i].r)>=canvas.width && (object[i].y-object[i].r)<=0) || ((object[i].y+object[i].r)>=canvas.height && (object[i].x-object[i].r)<=0))
+		object[i].a=270-object[i].a;
+	else if(((object[i].x+object[i].r)>=canvas.width && (object[i].y+object[i].r)>=canvas.height) || ((object[i].y-object[i].r)<=0 && (object[i].x-object[i].r)<=0))
+		object[i].a=180+270-object[i].a;
+		
+	else if((object[i].x+object[i].r)>=canvas.width || (object[i].x-object[i].r)<=0)
+		object[i].a=180-object[i].a;
+	else if((object[i].y+object[i].r)>=canvas.height || (object[i].y-object[i].r)<=0)
+		object[i].a=-1*object[i].a;		
+	
+	ctx.beginPath();
+	ctx.arc(object[i].x,object[i].y,object[i].r,0,2*Math.PI);
+	ctx.fillStyle=object[i].c;
+	ctx.fill();
+	ctx.closePath();
+	
+	object[i].x=object[i].x+object[i].u*Math.cos((360-object[i].a)*Math.PI/180);
+	object[i].y=object[i].y+object[i].u*Math.sin((360-object[i].a)*Math.PI/180);
+	}
+	
+window.onload=function frame()
+	{
+	ctx.clearRect(0,0,1340,640);
+	for(var i=0;i<n_balls;i++)
+		move(i);
+	
+	setTimeout(function(){frame()},17);
+	}
+
+
+</script>
+</body>
+</html>
